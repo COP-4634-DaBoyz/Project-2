@@ -2,23 +2,31 @@
 #include <thread>
 #include <pthread.h>
 #include <mutex>
+#include <vector>
+#include <queue>
 
 void rangeIsEven(int n);
 void rangeIsOdd(int n);
-//void ex(int x);
-int range = 2;
+
+int ZA_WARUDO = 0;
 int numOfThreads = 1;
 int currentThread = 0;
-//int p = 22;
+int counter = 0;
+std::vector<int> histogram;
 
 
 int main(int argc, char* argv[])
 {
 	
+	int ceiling = 0;
+	std::queue<int> holder;
+	if (argv[1] != NULL )
+	{
+		ceiling = std::atoi(argv[1]);
+		numOfThreads = std::atoi(argv[2]);
+	}
 
-	
-	range = std::atoi(argv[1]);
-	numOfThreads = std::atoi(argv[2]);
+	ZA_WARUDO = ceiling;
 	std::mutex mtx;
 
 	std::thread threads[numOfThreads];
@@ -26,46 +34,45 @@ int main(int argc, char* argv[])
 	//threads[0].join();
 	//std::cout << range << std::endl;
 	//std::cout << range << " " << numOfThreads << std::endl;
-	
-	while (range != 1)
+	if (argv[1] != NULL)
 	{
-		if (currentThread == numOfThreads)
-			currentThread = 0;
-
-		mtx.lock();
-		if (range % 2 == 0)
+		while (ZA_WARUDO != 1)
 		{
+			if (currentThread == numOfThreads)
+				currentThread = 0;
+
+			mtx.lock();
+			if (ZA_WARUDO % 2 == 0)
+			{
+				threads[currentThread] = std::thread(rangeIsEven, ZA_WARUDO);
+			}
+			else
+			{
+				threads[currentThread] = std::thread(rangeIsOdd, ZA_WARUDO);
+			}
+			mtx.unlock();
+
 			
-			threads[currentThread] = std::thread(rangeIsEven, range);
+			std::cout << ZA_WARUDO << std::endl;
+			holder.push(ZA_WARUDO);
+			threads[currentThread].join();
+			currentThread++;
+			counter++;
 		}
-		else
-		{
-			threads[currentThread] = std::thread(rangeIsOdd, range);
-		}
-		mtx.unlock();
+		//resize to the highest value in the holder queue for the array to resize it later TODO 
 
-		std::cout << range << std::endl;
-		threads[currentThread].join();
-		currentThread++;
+		//std::cout << counter << "\n";
 	}
-	
-	
 }
 
 
 void rangeIsEven(int n)
 {
-	range = n / 2;
+	ZA_WARUDO = n / 2;
 }
 
 void rangeIsOdd(int n)
 {
-	range = (3 * n) + 1;
+	ZA_WARUDO = (3 * n) + 1;
 }
 
-/*
-void ex(int x)
-{
-	range = x / 2;
-}
-*/
