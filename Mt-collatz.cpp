@@ -18,13 +18,15 @@ int histogram[HISTOGRAM_SIZE];
 
 int main(int argc, char* argv[])
 {
+
+	//init array with zeros 
 	for (int i = 0; i < HISTOGRAM_SIZE; i++) 
 		histogram[i] = 0;
 	
 	int range = 0;
 	
 
-	if (argv[1] != NULL )
+	if (argv[1] != NULL)
 	{
 		range = std::atoi(argv[1]);
 		numOfThreads = std::atoi(argv[2]);
@@ -34,24 +36,27 @@ int main(int argc, char* argv[])
 
 	if (argv[1] != NULL)
 	{
+		//start timer 
 		for (int i = 2; i <= range; i++)
 		{
-			if (currentThread == numOfThreads)
-			{
+			if (currentThread == numOfThreads) 
 				currentThread = 0;
-
-			}
 
 			threads[currentThread] = std::thread(computeStoppingTime, i);
 			threads[currentThread].join();
 			currentThread++;
-		}
+		}	
+		//end timer 
+
 	}
+
+	//get histogram data and redirect output etc  
 }
 
 void computeStoppingTime(int num)
 {
 	mtx.lock();
+	stopValue = 0;
 	while (num > 1)
 	{
 		if (num % 2 == 0)
@@ -79,4 +84,5 @@ void rangeIsOdd(int& n)
 {
 	n = (3 * n) + 1;
 }
+
 
