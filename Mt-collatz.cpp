@@ -3,6 +3,8 @@
 #include <pthread.h>
 #include <mutex>
 #include <vector>
+#include <sys/time.h>
+#include <bits/stdc++.h> 
 
 void rangeIsEven(int& n);
 void rangeIsOdd(int& n);
@@ -37,6 +39,9 @@ int main(int argc, char* argv[])
 	if (argv[1] != NULL)
 	{
 		//start timer 
+		struct timespec start, end;
+		clock_gettime(CLOCK_MONOTONIC, &start);
+		std::ios_base::sync_with_stdio(false);
 		for (counter = 2; counter <= range; counter++)
 		{
 			if (currentThread == numOfThreads)
@@ -54,7 +59,7 @@ int main(int argc, char* argv[])
 
 			currentThread++;
 		}	
-		std::cout << "done\n";
+		
 
 		for (int i = 0; i < numOfThreads; i++)
 		{
@@ -65,6 +70,23 @@ int main(int argc, char* argv[])
 			}
 				
 		}
+
+		clock_gettime(CLOCK_MONOTONIC, &end);
+
+		double stopWatch;
+		stopWatch = (end.tv_sec - start.tv_sec) * 1e9;
+		stopWatch = (stopWatch + (end.tv_nsec - start.tv_nsec)) * 1e-9;
+		
+		for (int i = 0; i < HISTOGRAM_SIZE; i++)
+		{
+			std::cout << i << ", " << histogram[i] << std::endl;
+
+			if(i == HISTOGRAM_SIZE-1) 
+				std::cout << i << ", " << histogram[i]  << ", "<< std::fixed << stopWatch << std::setprecision(9) << std::endl;
+		}
+
+		//std::cout << std::fixed << stopWatch << std::setprecision(9) << std::endl;
+		//std::cout << "done\n";
 
 		
 		/*
@@ -118,8 +140,7 @@ int main(int argc, char* argv[])
 
 		//end timer 
 		//get histogram data and redirect output etc  
-		//for (int i = 0; i < HISTOGRAM_SIZE; i++)
-		//	std::cout << i << ", " << histogram[i] << std::endl;
+		//
 		
 		
 	}
