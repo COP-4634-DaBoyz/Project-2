@@ -39,19 +39,19 @@ int main(int argc, char* argv[])
 		for (int i = 2; i <= range; i++)
 		{
 			if (currentThread == numOfThreads) 
-				currentThread = 0;
+					currentThread = 0;
 
 			threads[currentThread] = std::thread(computeStoppingTime, i);
 			threads[currentThread].join();
 			currentThread++;
 		}	
 
-		for (int i = 0; i < HISTOGRAM_SIZE; i++)
-		{
-			std::cout << i << ", " << histogram[i] << std::endl;
-		}
 		//end timer 
 		//get histogram data and redirect output etc  
+		for (int i = 0; i < HISTOGRAM_SIZE; i++)
+			std::cout << i << ", " << histogram[i] << std::endl;
+		
+		
 	}
 }
 
@@ -62,13 +62,10 @@ void computeStoppingTime(int num)
 	while (num > 1)
 	{
 		if (num % 2 == 0)
-		{
 			rangeIsEven(num);
-		}
-		else
-		{
+		else	
 			rangeIsOdd(num);
-		}
+
 		stopValue++;
 	}
 	histogram[stopValue] += 1;
