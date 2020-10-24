@@ -14,6 +14,7 @@ int stopValue = 0;
 int numOfThreads = 1;
 int currentThread = 0;
 int histogram[HISTOGRAM_SIZE];
+int counter = 2;
 
 int main(int argc, char* argv[])
 {
@@ -30,26 +31,95 @@ int main(int argc, char* argv[])
 		range = std::atoi(argv[1]);
 		numOfThreads = std::atoi(argv[2]);
 	}
-
+	//std::cout << numOfThreads << "\n";
 	std::thread threads[numOfThreads];
 
 	if (argv[1] != NULL)
 	{
 		//start timer 
-		for (int i = 2; i <= range; i++)
+		for (counter = 2; counter <= range; counter++)
 		{
-			if (currentThread == numOfThreads) 
-					currentThread = 0;
+			if (currentThread == numOfThreads)
+			{
+				
+				currentThread = 0;
+				for (int i = 0; i < numOfThreads; i++)
+					if(threads[i].joinable())
+						threads[i].join();
+			}
+			
+			threads[currentThread] = std::thread(computeStoppingTime, counter);
+			//std::cout << "Thread: " << currentThread << " " << threads[currentThread].get_id() << "\n";
 
-			threads[currentThread] = std::thread(computeStoppingTime, i);
-			threads[currentThread].join();
+
 			currentThread++;
 		}	
+		std::cout << "done\n";
+
+		for (int i = 0; i < numOfThreads; i++)
+		{
+			if (threads[i].joinable())
+			{
+				threads[i].join();
+				//std::cout << "joining1: " << i << "\n";
+			}
+				
+		}
+
+		
+		/*
+		if (numOfThreads % 2 == 0)
+		{
+			if (range % 2 == 0)
+			{
+				for (int i = 0; i < numOfThreads; i++)
+				{
+					if(threads[i].joinable())
+					threads[i].join();
+					std::cout << "joining1: " << i << "\n";
+				}
+			}
+			else
+			{//even threads odd range
+				for (int i = 0; i < numOfThreads; i++)
+				{
+					if (threads[i].joinable())
+					threads[i].join();
+					std::cout << "joining2: " << i << "\n";
+				}
+			}
+			
+		}
+		else 
+		{
+			if (range % 2 == 0)
+			{
+				for (int i = 0; i < numOfThreads; i++)
+				{
+					if (threads[i].joinable())
+					threads[i].join();
+					std::cout << "joining3: " << i << "\n";
+				}
+			}
+			else
+			{
+				for (int i = 0; i < numOfThreads ; i++)
+				{
+					if(threads[i].joinable())
+					threads[i].join();
+					std::cout << "joining4: " << i << "\n";
+				}
+			}
+			
+		}
+
+		*/
+
 
 		//end timer 
 		//get histogram data and redirect output etc  
-		for (int i = 0; i < HISTOGRAM_SIZE; i++)
-			std::cout << i << ", " << histogram[i] << std::endl;
+		//for (int i = 0; i < HISTOGRAM_SIZE; i++)
+		//	std::cout << i << ", " << histogram[i] << std::endl;
 		
 		
 	}
