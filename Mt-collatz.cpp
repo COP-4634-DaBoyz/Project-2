@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <mutex>
 #include <vector>
-#include <queue>
 
 void rangeIsEven(int& n);
 void rangeIsOdd(int& n);
@@ -46,11 +45,14 @@ int main(int argc, char* argv[])
 			threads[currentThread].join();
 			currentThread++;
 		}	
+
+		for (int i = 0; i < HISTOGRAM_SIZE; i++)
+		{
+			std::cout << i << ", " << histogram[i] << std::endl;
+		}
 		//end timer 
-
+		//get histogram data and redirect output etc  
 	}
-
-	//get histogram data and redirect output etc  
 }
 
 void computeStoppingTime(int num)
@@ -71,7 +73,6 @@ void computeStoppingTime(int num)
 	}
 	histogram[stopValue] += 1;
 	mtx.unlock();
-
 }
 
 
