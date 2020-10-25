@@ -82,66 +82,8 @@ int main(int argc, char* argv[])
 			std::cout << i << ", " << histogram[i] << std::endl;
 
 			if(i == HISTOGRAM_SIZE-1) 
-				std::cout << i << ", " << histogram[i]  << ", "<< std::fixed << stopWatch << std::setprecision(9) << std::endl;
+				std::cerr << range << ", " << numOfThreads << ", "<< std::fixed << stopWatch << std::setprecision(9) << std::endl;
 		}
-
-		//std::cout << std::fixed << stopWatch << std::setprecision(9) << std::endl;
-		//std::cout << "done\n";
-
-		
-		/*
-		if (numOfThreads % 2 == 0)
-		{
-			if (range % 2 == 0)
-			{
-				for (int i = 0; i < numOfThreads; i++)
-				{
-					if(threads[i].joinable())
-					threads[i].join();
-					std::cout << "joining1: " << i << "\n";
-				}
-			}
-			else
-			{//even threads odd range
-				for (int i = 0; i < numOfThreads; i++)
-				{
-					if (threads[i].joinable())
-					threads[i].join();
-					std::cout << "joining2: " << i << "\n";
-				}
-			}
-			
-		}
-		else 
-		{
-			if (range % 2 == 0)
-			{
-				for (int i = 0; i < numOfThreads; i++)
-				{
-					if (threads[i].joinable())
-					threads[i].join();
-					std::cout << "joining3: " << i << "\n";
-				}
-			}
-			else
-			{
-				for (int i = 0; i < numOfThreads ; i++)
-				{
-					if(threads[i].joinable())
-					threads[i].join();
-					std::cout << "joining4: " << i << "\n";
-				}
-			}
-			
-		}
-
-		*/
-
-
-		//end timer 
-		//get histogram data and redirect output etc  
-		//
-		
 		
 	}
 }
