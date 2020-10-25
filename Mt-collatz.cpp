@@ -5,8 +5,19 @@
 #include <vector>
 #include <sys/time.h>
 #include <bits/stdc++.h> 
+/*
+	Austyn Washington & Daniel Tran
+	10/25/2020
+	rangeIsEven(): Does the operation for the series if the number is even
+	rangeIsOdd(): Does the operation for the series if the number is odd
+	computeStoppingTime(): Computes the stopping time for the current number and places it in the global histogram array
 
-void rangeIsEven(int& n);
+
+	Mt-collatz.cpp takes 2 parameters containing the range of the operation and the number of threads to be executed to complete the operation
+*/
+
+
+void rangeIsEven(int& n); 
 void rangeIsOdd(int& n);
 void computeStoppingTime(int num);
 
@@ -20,24 +31,16 @@ int counter = 2;
 
 int main(int argc, char* argv[])
 {
-
-	//init array with zeros 
+	int range = 0;
 	for (int i = 0; i < HISTOGRAM_SIZE; i++) 
 		histogram[i] = 0;
 	
-	int range = 0;
-	
-
-	if (argv[1] != NULL)
+	if (argv[1] != NULL && argv[2])
 	{
 		range = std::atoi(argv[1]);
 		numOfThreads = std::atoi(argv[2]);
-	}
-	//std::cout << numOfThreads << "\n";
-	std::thread threads[numOfThreads];
-
-	if (argv[1] != NULL)
-	{
+		std::thread threads[numOfThreads];
+		
 		//start timer 
 		struct timespec start, end;
 		clock_gettime(CLOCK_MONOTONIC, &start);
@@ -45,34 +48,25 @@ int main(int argc, char* argv[])
 		for (counter = 2; counter <= range; counter++)
 		{
 			if (currentThread == numOfThreads)
-			{
-				
-				currentThread = 0;
+			{	
+				currentThread = 0; //reset currentThread 
+
 				for (int i = 0; i < numOfThreads; i++)
 					if(threads[i].joinable())
-						threads[i].join();
+						threads[i].join(); //checks if joinable operation
 			}
 			
 			threads[currentThread] = std::thread(computeStoppingTime, counter);
-			//std::cout << "Thread: " << currentThread << " " << threads[currentThread].get_id() << "\n";
-
-
 			currentThread++;
 		}	
 		
-
-		for (int i = 0; i < numOfThreads; i++)
-		{
-			if (threads[i].joinable())
-			{
-				threads[i].join();
-				//std::cout << "joining1: " << i << "\n";
-			}
-				
-		}
-
+		//End timer 
 		clock_gettime(CLOCK_MONOTONIC, &end);
-
+		for (int i = 0; i < numOfThreads; i++)
+			if (threads[i].joinable()) //checks if joinable operation to finish the last incoming threads
+				threads[i].join();
+				
+		
 		double stopWatch;
 		stopWatch = (end.tv_sec - start.tv_sec) * 1e9;
 		stopWatch = (stopWatch + (end.tv_nsec - start.tv_nsec)) * 1e-9;
